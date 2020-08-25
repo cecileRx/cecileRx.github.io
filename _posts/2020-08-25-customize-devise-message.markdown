@@ -11,7 +11,7 @@ I don't like the "Welcome, you have signed up successfully" flash message that *
 <br>
 
 
-<div style="text-align: center"><img src="{{ https://cecilerx.github.io }}{{ /customize-devise-message }}/assets/images/road_314-400.jpg" alt="a road to somewhere"></div>
+<div style="text-align: center"><img src="/assets/images/road_314-400.jpg" alt="a road to somewhere"></div>
 
 <br>
 <br>
@@ -155,7 +155,7 @@ class ApplicationController < ActionController::Base
 #### And now, the magic happens ;)
 
 
-<div style="text-align: center"><img src="{{ https://cecilerx.github.io }}{{ /customize-devise-message }}/assets/images/hello.png" alt="screenshot of the welcome flash message"></div>
+<div style="text-align: center"><img src="/assets/images/hello.png" alt="screenshot of the welcome flash message"></div>
 <br>
 <br>
 
