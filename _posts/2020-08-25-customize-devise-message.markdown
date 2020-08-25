@@ -8,9 +8,18 @@ categories: jekyll update
 **PROBLEM:**
 I don't like the "Welcome, you have signed up successfully" flash message that **Devise** displays when a user signs up. I want something more personalized, I want a warm welcome. Easy! In a blink, it will be done!  Well, not that fast, actually.
 
+<br>
+
+
+<div style="text-align: center"><img src="{{ https://cecilerx.github.io }}{{ /customize-devise-message }}/assets/images/road_314-400.jpg" alt="a road to somewhere"></div>
+
+<br>
+<br>
+
+
 ### What do I need to display a personalized message?
 
-To add a bit of warmness in this boring process of signing up, I want to address to the new user by her/his **username**.
+To add a bit of warmness in this boring process of signing up, I want to address the new user by her/his **username**.
 So first I need to **modify my user model** by adding a username attribute.
 ```
 $ rails generate migration AddUsernameToUsers username:string
@@ -19,7 +28,7 @@ Then to save the change of my DB schema:
 ```
 $ rails db:migrate
 ```
-Now I have to give my user the possibility to set a nice username. As far as I can see, the Devise's default views have only 2 required fields for signing up: email and password. Ok, so I need to **access the registrations views** to modify it I guess.
+Now I have to give my user the possibility to set a nice username. As far as I can see, the Devise's default views have only 2 required fields for signing up: email and password. Ok, so I need to **access the registrations views** to modify it.
 
 ### Where are the Devise's registrations Views?
 
@@ -50,9 +59,10 @@ I just need to add the username field on the form:
       </div>
  ```
 
+
 ### Where is the controller responsible for registration actions?
 
- When a user provides a correct email, password and username, a new user is registered,  Under the hood, the Registrations Controller is hit and specifically its create method that holds the logic for registration.  If the process is successful, the controller will ask the associated view to display a welcome message.
+ When a user provides a correct email, password and username, a new user is registered.  Under the hood, the Registrations Controller is hit, and specifically its create method that holds the logic for registration.  If the process is successful, the controller will ask the associated view to display a welcome message.
 I need to access this controller to modify the create method in the way I want. Right, but by default, Devise's controllers are hidden as well. Not a problem, there is also a simple **generator to create customizable controllers**:
 ```
 $ rails generate devise:controllers users
@@ -104,7 +114,7 @@ by
 ```
 flash[:notice] = "Hello there, #{resource.username}! Glad to welcome you here!"
 ```
-But I do want to use I18n gem soon, so I prefer to pass the username variable to the set_flash_message method and then modify the **devise.en.yml** file that holds all the flash messages translations.
+But I do want to use I18n gem soon, so I prefer to pass the username variable to the set_flash_message method and then modify the **devise.en.yml** file that holds all the flash messages english translations.
 ````
 set_flash_message! :notice, :signed_up, :username => resource.username
 ````
@@ -116,7 +126,7 @@ Now that the set_flash_message method can access the username variable, I just n
 en:
   devise:
     registrations:
-      sign_up: "Hello there, %{username}! Glad to welcome you here!."
+      sign_up: "Hello there, %{username}! Glad to welcome you here!"
 ````
 
 ### Debugging...
@@ -142,9 +152,14 @@ class ApplicationController < ActionController::Base
   end
   ````
 
-And now, the magic happens ;)
+#### And now, the magic happens ;)
 
-[^1]: All references for devise are from their great documentation. For example, to configure the views, see:[https://github.com/heartcombo/devise#configuring-views](https://github.com/heartcombo/devise#configuring-views)
+
+<div style="text-align: center"><img src="{{ https://cecilerx.github.io }}{{ /customize-devise-message }}/assets/images/hello.png" alt="screenshot of the welcome flash message"></div>
+<br>
+<br>
+
+[^1]: All references for Devise are from their great documentation. For example, to configure the views, see:[https://github.com/heartcombo/devise#configuring-views](https://github.com/heartcombo/devise#configuring-views)
 
 [^2]: For a quick overview about the 'super' keyword in ruby, see: [https://medium.com/rubycademy/the-super-keyword-a75b67f46f05](https://medium.com/rubycademy/the-super-keyword-a75b67f46f05)
 
