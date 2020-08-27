@@ -20,7 +20,7 @@
 
 title: It could be worse
 email: jedixxx@gmail.com
-name: Cécile Rougnaux
+author: Cécile Rougnaux
 description: >- # this means to ignore newlines until "baseurl:"
   When we start coding, we hardly have the notion of how difficult and time consuming a simple feature will be to code. When we think it will be fast, suddenly it appears to be more complex than expected. More complex doesn’t mean more difficult, but surely we won’t go to bed that early. This blog is here to turn the 'WTF moment' we can have discovering we’ll have to postpone our sleep, into the joy of realizing that the deeper we go, the more we learn.
 baseurl: "" # the subpath of your site, e.g. /blog
