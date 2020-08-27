@@ -2,7 +2,8 @@
 layout: post
 title:  "Customize Devise's flash messages"
 date:   2020-08-24 21:31:36 +0200
-categories: jekyll update
+canonical_url: "https://cecilerx.github.io/customize-devise-message/"
+categories: rails devise
 ---
 
 **PROBLEM:**
@@ -19,7 +20,7 @@ I don't like the "Welcome, you have signed up successfully" flash message that *
 
 ### What do I need to display a personalized message?
 
-To add a bit of warmness in this boring process of signing up, I want to address the new user by her/his **username**.
+To add a bit of warmness to this boring process of signing up, I want to address the new user by her/his **username**.
 So first I need to **modify my user model** by adding a username attribute.
 ```
 $ rails generate migration AddUsernameToUsers username:string
@@ -30,14 +31,14 @@ $ rails db:migrate
 ```
 Now I have to give my user the possibility to set a nice username. As far as I can see, the Devise's default views have only 2 required fields for signing up: email and password. Ok, so I need to **access the registrations views** to modify it.
 
-### Where are the Devise's registrations Views?
+### Where are the Devise registrations Views?
 
-In my app folder, Devise's views are nowhere to be found. Obviously they are hidden, but it must be a way to see them!
-Here comes the great documentation written by the authors of the gem[^1]. Devise provides a simple **generator** to copy all the views associated with authentification in a  dedicated folder.
+In my app folder, Devise views are nowhere to be found. Obviously they are hidden, but there must be a way to see them!
+Here comes the great documentation written by the authors of the gem[^1]. Devise provides a simple **generator** to copy all the views associated with authentication in a  dedicated folder.
 ```
 $ rails generate devise:views
 ```
-Now I have a Devise folder, and inside I can find a registration folder with the **new.html.erb** file I deserve.
+Now I have a Devise folder, and inside I can find a registration folder with the **new.html.erb** file I expected.
 I just need to add the username field on the form:
 ``` ruby
  <div class="form-inputs">
@@ -62,12 +63,12 @@ I just need to add the username field on the form:
 
 ### Where is the controller responsible for registration actions?
 
- When a user provides a correct email, password and username, a new user is registered.  Under the hood, the Registrations Controller is hit, and specifically its create method that holds the logic for registration.  If the process is successful, the controller will ask the associated view to display a welcome message.
-I need to access this controller to modify the create method in the way I want. Right, but by default, Devise's controllers are hidden as well. Not a problem, there is also a simple **generator to create customizable controllers**:
+ When a user provides a correct email, password and username, a new user is registered.  Under the hood, the **Registrations Controller** is hit, and specifically its create method that holds the logic for registration.  If the process is successful, the controller will ask the associated view to display a welcome message.
+I need to access this controller to modify the create method in the way I want. Right, but by default, Devise controllers are hidden as well. Not a problem, there is also a simple **generator to create customizable controllers**:
 ```
 $ rails generate devise:controllers users
 ```
-I specify the users as the scope, in order to keep the devise controllers separated from the others. The controllers associated with authentification will be in a users folder, inside the controllers folder of my app.
+I specify the users as the scope, in order to keep the Devise controllers separated from the others. The controllers associated with authentication will be in a users folder, inside the controllers folder of my app.
 
 ### How do I modify the Registrations Controller?
 
@@ -114,7 +115,7 @@ by
 ```
 flash[:notice] = "Hello there, #{resource.username}! Glad to welcome you here!"
 ```
-But I do want to use I18n gem soon, so I prefer to pass the username variable to the set_flash_message method and then modify the **devise.en.yml** file that holds all the flash messages english translations.
+But I do want to use I18n gem soon, so I prefer to pass the username variable to the set_flash_message method and then modify the **devise.en.yml** file that holds all the english translations of the flash messages.
 ````
 set_flash_message! :notice, :signed_up, :username => resource.username
 ````
@@ -133,11 +134,11 @@ en:
 
 Everything seems fine, I restarted the server, and now I am ready to receive my nice welcome message.
 A quick test and well, how disappointing! I have the new flash message, yes, but I don't see my username appear. What can be wrong I ask? It was supposed to be super fast, and I already spent too much time understanding the whole thing.
-Checking the rails console I realize that the last registered user has a **username set to NIL**. I entered a beautiful one though,  so Devise just refused to save it in my DB. Must be a security problem I guess, for sure Devise's methods have strong parameters. Just need to find where to add the username parameter to the list.
+Checking the rails console I realize that the last registered user has a **username set to NIL**. I entered a beautiful one though, but Devise refused to save it in my DB. Must be a security problem I guess, for sure Devise methods have strong parameters. Just need to find where to add the username parameter to the list.
 
 #### Devise strong parameters
 
-Once again Devise's documentation is my friend. I discover that I don't need to modify  Devise's source code, but I have to **configure the permitted parameters** in the **Application Controller** in 2 steps.
+Once again Devise documentation is my friend. I discover that I don't need to modify  Devise source code, but I have to **configure the permitted parameters** in the **Application Controller** in 2 steps.
 - Adding a before action
 ```` ruby
 class ApplicationController < ActionController::Base
@@ -159,11 +160,11 @@ class ApplicationController < ActionController::Base
 <br>
 <br>
 
-[^1]: All references for Devise are from their great documentation. For example, to configure the views, see:[https://github.com/heartcombo/devise#configuring-views](https://github.com/heartcombo/devise#configuring-views)
+[^1]: All references for Devise are from their great documentation. For example, to configure the views, see: [https://github.com/heartcombo/devise#configuring-views](https://github.com/heartcombo/devise#configuring-views)
 
 [^2]: For a quick overview about the 'super' keyword in ruby, see: [https://medium.com/rubycademy/the-super-keyword-a75b67f46f05](https://medium.com/rubycademy/the-super-keyword-a75b67f46f05)
 
-[^3]: Devise's source code is open source and available in the heartcombo github repository. For example, the Registration Controller's source code is here:[https://github.com/heartcombo/devise/blob/master/app/controllers/devise/registrations_controller.rb](https://github.com/heartcombo/devise/blob/master/app/controllers/devise/registrations_controller.rb)
+[^3]: Devise's source code is open source and available in the heartcombo github repository. For example, the Registration Controller's source code is here: [https://github.com/heartcombo/devise/blob/master/app/controllers/devise/registrations_controller.rb](https://github.com/heartcombo/devise/blob/master/app/controllers/devise/registrations_controller.rb)
 
 
 
